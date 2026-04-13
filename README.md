@@ -1,9 +1,9 @@
 # BeastLocator for Watch
 
 <img src="https://github.com/tpc134/BeastLocator-watch/blob/master/readme-pic/IMG_1471.jpeg" alt="image">
-<img src="https://github.com/tpc134/BeastLocator-watch/blob/master/readme-pic/IMG_1470.jpeg" alt="image"
-<img src="https://github.com/tpc134/BeastLocator-watch/blob/master/readme-pic/IMG_1469.jpeg" alt="image"
-<img src="https://github.com/tpc134/BeastLocator-watch/blob/master/readme-pic/IMG_1468.jpeg" alt="image"
+<img src="https://github.com/tpc134/BeastLocator-watch/blob/master/readme-pic/IMG_1470.jpeg" alt="image">
+<img src="https://github.com/tpc134/BeastLocator-watch/blob/master/readme-pic/IMG_1469.jpeg" alt="image">
+<img src="https://github.com/tpc134/BeastLocator-watch/blob/master/readme-pic/IMG_1468.jpeg" alt="image">
 
 [English](#english) | [中文](#中文)
 
