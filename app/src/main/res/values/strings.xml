@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">BeastLocator for Watch</string>
+    <string name="settings">設定</string>
+    <string name="settings_subtitle">通知表示やウィジェット設定を調整できます</string>
+    <string name="arrow">方角矢印</string>
+    <string name="waiting_location">現在地を取得中...</string>
+    <string name="direction_placeholder">方角: --</string>
+    <string name="direction_label">方角: %1$s</string>
+    <string name="permission_needed">位置情報の権限が必要です</string>
+    <string name="precise_permission_guide_title">正確な位置情報の許可</string>
+    <string name="precise_permission_guide_message">このアプリは正確な位置情報がないと安定して動作できません。次の画面で「権限」を開き、位置情報を「正確な位置情報」に変更してください</string>
+    <string name="precise_permission_guide_positive">設定へ進む</string>
+    <string name="location_service_disabled">端末の位置情報がオフです。設定を確認してください</string>
+    <string name="location_timeout">位置情報を取得できません。しばらくして再度お試しください</string>
+    <string name="location_update_start_failed">位置情報の取得を開始できませんでした</string>
+    <string name="background_permission_guide_title">バックグラウンド位置情報の許可</string>
+    <string name="background_permission_guide_message">ウィジェット更新や到達通知を正しく動かすため、次の画面で「権限」を開き、位置情報を「常に許可」に変更してください</string>
+    <string name="background_permission_guide_positive">設定へ進む</string>
+    <string name="welcome_title">BeastLocatorへようこそ</string>
+    <string name="welcome_message">このアプリがあれば、野獣邸までの方向を瞬時に把握できます\n\n⚠️このアプリは、個人的に制作したファン向けのアプリです。コートコーポレーション本社周辺での迷惑行為を推奨、および助長するものではありません。</string>
+    <string name="welcome_start_button">はじめる</string>
+    <string name="fixed_destination_title">現在の目的地</string>
+    <string name="fixed_destination_help">野獣邸の座標です。この目的地を案内します</string>
+    <string name="fixed_destination_value_format">緯度 %1$s / 経度 %2$s</string>
+
+    <string name="radius_title">行き先の抽選半径</string>
+    <string name="radius_help">数値をタップで手動入力</string>
+    <string name="new_destination">新しい目的地を抽選する</string>
+    <string name="manual_destination_button">緯度経度で目的地を設定</string>
+    <string name="manual_destination_lat_hint">緯度 (例: 35.665554)</string>
+    <string name="manual_destination_lng_hint">経度 (例: 139.669717)</string>
+    <string name="manual_destination_invalid">緯度は-90〜90、経度は-180〜180で入力してください</string>
+    <string name="land_only_destination_toggle">陸地のみを指定する (Beta)</string>
+    <string name="land_only_destination_help">目的地の抽選時に海上の候補を避けるようになります。場合によって海上の位置が選ばれることがあります</string>
+    <string name="destination_action_title">目的地の設定</string>
+    <string name="destination_action_help">アプリが指す目的地を指定</string>
+    <string name="notification_title_group">通知</string>
+    <string name="notification_help">目的地に近づいた際の通知</string>
+    <string name="privacy_guard_title">身バレ防止機能</string>
+    <string name="privacy_guard_help">位置の特定につながる項目に関する設定</string>
+    <string name="arrival_notification_toggle">到達時に通知を表示</string>
+    <string name="arrival_notification_toggle_help">50m以内まで到達した際に、目的地に到着した旨を通知で送信します</string>
+    <string name="live_update_toggle">到達進捗を通知で表示</string>
+    <string name="live_update_toggle_help">目的地から一定の距離まで近づくと、ライブアップデートにより進捗を通知で知らせます</string>
+    <string name="screenshot_mask_toggle">身バレ防止ボタンを表示</string>
+    <string name="screenshot_mask_toggle_help">メイン画面右上に、距離や方角に関する表示を大雑把な表示に切り替えるボタンを表示します</string>
+    <string name="screenshot_warning_toggle">身バレ防止警告を表示</string>
+    <string name="screenshot_warning_toggle_help">リスクを忘れないために、スクリーンショットを検知した際に特定リスクがある旨の警告を表示します</string>
+    <string name="screenshot_warning_toggle_unsupported">警告機能は Android 14+ で利用できます</string>
+    <string name="sound_settings_title">サウンド再生 (実験的)</string>
+    <string name="sound_settings_help">いずれかをONにすると、位置情報を常に監視するようになるためバッテリーの減りが早くなる可能性があります</string>
+    <string name="arrival_sound_toggle">到着時のこ↑こ↓サウンド</string>
+    <string name="arrival_sound_toggle_help">目的地まで50m以内に入った際に こ↑こ↓ と音声が流れます</string>
+    <string name="distance_114514_sound_toggle">114.514kmで呼び込み先輩を再生</string>
+    <string name="distance_114514_sound_toggle_help">距離が114.514kmに到達した際に呼び込み先輩の音楽を再生します\n⚠️この音楽は一時停止できないため、公共の場で鳴らないよう注意してください</string>
+    <string name="distance_114514_link_button">元動画を開く</string>
+    <string name="distance_interval_sound_toggle">一定間隔ごとに咆哮を再生</string>
+    <string name="distance_interval_sound_toggle_help">目的地まで一定の距離近づくたびに野獣の咆哮を再生します\n⚠️この音声は一時停止できないため、公共の場で鳴らないよう注意してください</string>
+    <string name="distance_interval_sound_distance_title">再生する間隔</string>
+    <string name="distance_interval_sound_distance_help">100m〜5kmの範囲で設定できます</string>
+    <string name="distance_interval_sound_distance_value_m" translatable="false">%1$d m</string>
+    <string name="distance_interval_sound_distance_value_km" translatable="false">%.1f km</string>
+    <string name="distance_mask_button_content_description_on">距離表示の丸めをオフにする</string>
+    <string name="distance_mask_button_content_description_off">距離表示の丸めをオンにする</string>
+    <string name="live_update_start_distance_title">進捗表示を開始する距離</string>
+    <string name="live_update_start_distance_help">200m〜5kmの範囲で設定できます</string>
+    <string name="live_update_start_distance_value_m" translatable="false">%1$d m</string>
+    <string name="live_update_start_distance_value_km" translatable="false">%.1f km</string>
+    <string name="live_update_start_distance_unsupported">開始距離の設定は Android 16+ で利用できます</string>
+    <string name="compass_settings_title">コンパス</string>
+    <string name="compass_settings_help">方位表示に関する設定</string>
+    <string name="compass_legacy_mode_title">コンパスを従来方式にする</string>
+    <string name="compass_legacy_mode_summary">コンパスの測定方式を従来の方式にします\nコンパスの動作が不安定な場合にお試しください</string>
+    <string name="widget_settings_title">ウィジェット設定</string>
+    <string name="widget_settings_help">ウィジェットの方位表示</string>
+    <string name="background_location_section_title">バックグラウンド更新</string>
+    <string name="background_location_section_help">バックグラウンド動作に関する設定</string>
+    <string name="background_location_update_toggle">バックグラウンドで位置を更新</string>
+    <string name="background_location_update_help">バックグラウンドアプリとして動作して位置を更新するため、通知が来やすくなります</string>
+    <string name="background_location_update_help_forced">音声再生機能が有効なため、この設定は常にオンになります</string>
+    <string name="background_location_update_warning_title">⚠️バッテリー消費に関する注意</string>
+    <string name="background_location_update_warning_message">バックグラウンドにするとウィジェットの更新や通知などの面で有利ですが、バッテリーの消費が早くなる可能性があります</string>
+    <string name="widget_bearing_mode_title">ウィジェットの方位表示</string>
+    <string name="widget_bearing_mode_absolute">絶対方位（北基準）</string>
+    <string name="widget_bearing_mode_relative">相対方位（端末の向き基準）</string>
+    <string name="live_update_toggle_unsupported">到達進捗を通知で表示 (Android 16+)</string>
+    <string name="experimental_settings_title">実験的機能</string>
+    <string name="experimental_settings_help">将来的に追加される機能の設定</string>
+    <string name="experimental_settings_open">実験的機能の設定を開く</string>
+    <string name="experimental_settings_screen_title">実験的機能</string>
+    <string name="experimental_settings_screen_help">将来的に追加される機能です</string>
+    <string name="experimental_language_title">言語設定</string>
+    <string name="experimental_language_help">ローカライズの設定</string>
+    <string name="experimental_language_toggle">日本語以外の言語も使用可能にする</string>
+    <string name="experimental_language_toggle_help">現在は簡体中国語、英語に対応しています</string>
+    <string name="experimental_language_open_settings">言語設定に進む</string>
+    <string name="experimental_compass_title">コンパス</string>
+    <string name="experimental_compass_help">方位表示に関する設定</string>
+    <string name="experimental_compass_smoothing_toggle">野獣先輩の動きを平滑化</string>
+    <string name="experimental_compass_smoothing_toggle_help">ONにすることで、野獣先輩の動きを多少滑らかにすることができます</string>
+    <string name="back">戻る</string>
+    <string name="about_section_title">このアプリについて</string>
+    <string name="about_section_help">アプリ情報とオープンソースライセンスを表示します</string>
+    <string name="about_section_open">表示する</string>
+    <string name="about_screen_title">このアプリについて</string>
+    <string name="about_version_label" translatable="false">%1$s  v%2$s (%3$d)</string>
+    <string name="about_dev_channel_title">開発チャネル</string>
+    <string name="about_dev_channel_dialog_title">開発チャネル: %1$s</string>
+    <string name="about_dev_channel_value_intdev">内部検証版</string>
+    <string name="about_dev_channel_value_beta">ベータ版</string>
+    <string name="about_dev_channel_value_stable">安定版</string>
+    <string name="about_dev_channel_value_unknown">不明</string>
+    <string name="about_dev_channel_desc_intdev">IntDev は内部検証時に使用されます。開発者と一部のメンバーにのみ公開され、仕様変更や不安定な挙動が含まれる可能性があります。デバッグメニューが含まれています。</string>
+    <string name="about_dev_channel_desc_dev">Beta はプレリリースのバージョンです。GitHubなどで公開されますが、不安定な挙動になる可能性があります。デバッグメニューが含まれています。</string>
+    <string name="about_dev_channel_desc_stable">Stable は安定版で、すでにバグ検証などが十分に行われてから実装され、挙動が安定しています。開発者向け機能などは削除されています。</string>
+    <string name="about_dev_channel_desc_unknown">このチャネルの説明は未登録です。</string>
+    <string name="about_simple_version_title">バージョン</string>
+    <string name="about_simple_version_value" translatable="false">v%1$s</string>
+    <string name="about_watch_notice">Android Watch 最適化版（原版 BeastLocator のフォーク）</string>
+    <string name="about_version_details_title">バージョン詳細</string>
+    <string name="about_version_details_message">バージョン: %1$s\n内部バージョン番号: %2$d\nビルド番号: %3$s</string>
+    <string name="about_oss_title">オープンソースライセンス</string>
+    <string name="about_oss_help">ライブラリごとのライセンス情報、URL、本文表示へ進みます</string>
+    <string name="about_oss_open">ライセンス一覧を開く</string>
+    <string name="about_support_title">サポート情報</string>
+    <string name="about_support_help">不具合報告や連絡先はこちら</string>
+    <string name="about_support_open_site">サイトを開く</string>
+    <string name="about_support_open_twitter">X (Twitter) を開く</string>
+    <string name="about_support_site_url" translatable="false">https://linkserver.jp/</string>
+    <string name="about_support_twitter_url" translatable="false">https://x.com/Link_2011A</string>
+    <string name="about_update_title">更新情報</string>
+    <string name="about_update_latest_format">現在のバージョン: %1$s (%2$d)</string>
+    <string name="about_update_notes">最新の更新内容:\n• 中国語の翻訳を改善\n• サポートする最小Androidバージョンを引き下げ(9 → 8.0)\n• その他のバグ修正</string>
+    <string name="oss_screen_title">オープンソースライセンス</string>
+    <string name="oss_button_open_url">URLを開く</string>
+    <string name="oss_button_show_text">本文を表示</string>
+    <string name="license_odbl" translatable="false">ODbL 1.0</string>
+    <string name="license_google_terms">Google Play services Terms</string>
+    <string name="license_apache_body" translatable="false">Apache License\nVersion 2.0, January 2004\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.</string>
+    <string name="license_odbl_body">OpenStreetMap data is licensed under ODbL 1.0.\n\nYou must provide attribution to OpenStreetMap contributors.\nIf you publicly use a produced work based on this data, the attribution must remain visible.\nIf you publicly use a derivative database, share-alike obligations may apply.\n\nDetails: https://opendatacommons.org/licenses/odbl/1-0/\nAttribution guideline: https://www.openstreetmap.org/copyright</string>
+    <string name="license_google_terms_body">Google Play services Location API is provided under Google Play services terms.\n\nThis is not distributed as a typical OSS license text in this app.\nPlease refer to Google\'s official terms and policies for details.</string>
+    <string name="oss_open_failed">URLを開けませんでした</string>
+    <string name="language_settings_open_failed">言語設定を開けませんでした</string>
+    <string name="oss_auto_load_failed">自動生成ライセンスの読み込みに失敗しました</string>
+    <string name="oss_unknown_license">License not specified</string>
+    <string name="oss_unknown_url">URLなし</string>
+    <string name="version_format">BeastLocator / Version %1$s</string>
+
+    <string name="notification_channel_name">目的地通知</string>
+    <string name="notification_title">野獣邸に到着</string>
+    <string name="notification_body">住所: %1$s</string>
+    <string name="notification_live_title">目的地へ接近中</string>
+    <string name="notification_live_body">到達まで %1$s</string>
+    <string name="notification_live_subtext">接近情報</string>
+    <string name="notification_live_summary">進捗 %1$d%%</string>
+    <string name="sound_monitor_channel_name">常時距離監視</string>
+    <string name="sound_monitor_notification_title">距離監視を実行中</string>
+    <string name="sound_monitor_notification_both">到着時/114.514km時の音声再生を監視しています</string>
+    <string name="sound_monitor_notification_arrival_only">到着時の音声再生を監視しています</string>
+    <string name="sound_monitor_notification_114514_only">114.514km時の音声再生を監視しています</string>
+    <string name="sound_monitor_notification_interval_only">距離間隔ごとの音声再生を監視しています</string>
+    <string name="sound_monitor_notification_arrival_and_interval">到着時/距離間隔ごとの音声再生を監視しています</string>
+    <string name="sound_monitor_notification_114514_and_interval">114.514km時/距離間隔ごとの音声再生を監視しています</string>
+    <string name="sound_monitor_notification_all">到着時/114.514km時/距離間隔ごとの音声再生を監視しています</string>
+    <string name="sound_monitor_notification_background_only">バックグラウンドで位置情報を更新しています</string>
+    <string name="sound_playback_channel_name">サウンド再生</string>
+    <string name="sound_playback_notification_title">サウンドを再生中</string>
+    <string name="sound_playback_notification_body">バックグラウンドで音声を再生しています</string>
+
+    <string name="widget_waiting_location">位置情報待機中</string>
+    <string name="widget_distance_placeholder" translatable="false">--</string>
+    <string name="widget_arrival_short">到着</string>
+    <string name="widget_arrival_celebration" translatable="false">🎉</string>
+    <string name="arrival_title">こ↑こ↓</string>
+    <string name="arrival_name_placeholder">正解位置を確認中...</string>
+    <string name="arrival_coords_placeholder">緯度 -- / 経度 --</string>
+    <string name="arrival_coords_format">緯度 %1$.6f / 経度 %2$.6f</string>
+    <string name="create_next_destination">到達状態をリセットする</string>
+    <string name="screenshot_privacy_warning">⚠️画面のスクショを投稿する場合は、身バレ防止機能の使用を推奨します</string>
+    <string name="distance_masked_format_km" translatable="false">%1$d km</string>
+    <string name="widget_description_small">目的地までの方角と距離(2x1)</string>
+    <string name="widget_description_large">目的地までの方角と距離(2x2)</string>
+    <string name="debug_toggle_show">デバッグメニューを表示</string>
+    <string name="debug_toggle_hide">デバッグメニューを非表示</string>
+    <string name="debug_section_title">デバッグ</string>
+    <string name="debug_revision_title">ビルド番号</string>
+    <string name="debug_revision_value" translatable="false">%1$s</string>
+    <string name="debug_show_reached">現在のセッションを到達とする</string>
+    <string name="debug_start_approach">到達進捗表示を開始</string>
+    <string name="debug_start_approach_unsupported">到達進捗表示を開始 (Android 16+)</string>
+    <string name="debug_set_distance_button">目的地までの距離を書き換え</string>
+    <string name="debug_reset_distance_button">目的地までの距離をリセット</string>
+    <string name="debug_set_distance_title">目的地までの距離を書き換え</string>
+    <string name="debug_set_distance_message">目的地までの距離を変更するため、デバッグ用に仮想現在地を使用します（単位: m）</string>
+    <string name="debug_set_distance_hint">例: 1000</string>
+    <string name="debug_set_distance_invalid">0以上 20000000以下で入力してください</string>
+    <string name="debug_set_distance_done">目的地までの距離を約%1$d mに設定しました</string>
+    <string name="debug_reset_distance_done">距離のデバッグ上書きをリセットしました</string>
+    <string name="debug_missing_location">現在地が未取得です</string>
+    <string name="debug_approach_out_of_range">目的地の50m圏内では開始できません</string>
+    <string name="debug_destination_override_title">追加デバッグ設定</string>
+    <string name="debug_destination_edit_button">目的地座標を編集</string>
+    <string name="debug_destination_reset_button">目的地を初期値に戻す</string>
+    <string name="debug_destination_edit_title">目的地を編集</string>
+    <string name="debug_destination_edit_message">緯度/経度で入力</string>
+    <string name="debug_destination_saved">設定を保存しました</string>
+    <string name="debug_destination_reset">設定を初期値に戻しました</string>
+    <string name="debug_destination_mode_default">現在値: %1$s, %2$s</string>
+    <string name="debug_destination_mode_override">現在値: %1$s, %2$s</string>
+</resources>
+

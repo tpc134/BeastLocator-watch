@@ -1,0 +1,379 @@
+import java.io.File
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.Properties
+import java.util.TimeZone
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.artifacts.result.ResolvedArtifactResult
+import org.gradle.maven.MavenModule
+import org.gradle.maven.MavenPomArtifact
+import java.util.zip.ZipFile
+import javax.xml.parsers.DocumentBuilderFactory
+
+plugins {
+    id("com.android.application")
+}
+
+val revisionStateFile = rootProject.file(".debug-revision-state.properties")
+
+fun collectRevisionInputFiles(path: File): List<File> {
+    if (!path.exists()) return emptyList()
+    if (path.isFile) return listOf(path)
+    return path.walkTopDown()
+        .onEnter { dir -> dir.name != "build" && dir.name != ".gradle" }
+        .filter { it.isFile }
+        .toList()
+}
+
+fun updateDigestWithFile(digest: MessageDigest, file: File, projectRoot: File) {
+    val relativePath = projectRoot.toPath().relativize(file.toPath()).toString().replace("\\", "/")
+    digest.update(relativePath.toByteArray(Charsets.UTF_8))
+    digest.update(0)
+    file.inputStream().use { input ->
+        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+        while (true) {
+            val read = input.read(buffer)
+            if (read <= 0) break
+            digest.update(buffer, 0, read)
+        }
+    }
+    digest.update(0)
+}
+
+fun computeRevisionHash(files: List<File>, projectRoot: File): String {
+    val digest = MessageDigest.getInstance("SHA-256")
+    files.sortedBy { it.absolutePath }.forEach { file ->
+        updateDigestWithFile(digest, file, projectRoot)
+    }
+    return digest.digest().joinToString("") { "%02x".format(it) }
+}
+
+fun createRevisionDateFormatter(): SimpleDateFormat {
+    return SimpleDateFormat("yyMMdd", Locale.US).apply {
+        timeZone = TimeZone.getTimeZone("Asia/Tokyo")
+    }
+}
+
+data class OssCatalogEntry(
+    val title: String,
+    val coordinate: String,
+    val license: String,
+    val url: String,
+    val body: String
+)
+
+fun jsonEscape(value: String): String {
+    return buildString(value.length + 16) {
+        value.forEach { ch ->
+            when (ch) {
+                '\\' -> append("\\\\")
+                '"' -> append("\\\"")
+                '\n' -> append("\\n")
+                '\r' -> append("\\r")
+                '\t' -> append("\\t")
+                else -> append(ch)
+            }
+        }
+    }
+}
+
+data class PomLicense(val name: String, val url: String?)
+
+data class PomMetadata(
+    val name: String?,
+    val projectUrl: String?,
+    val licenses: List<PomLicense>
+)
+
+fun parsePomMetadata(pomFile: File): PomMetadata {
+    return runCatching {
+        val doc = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder()
+            .parse(pomFile)
+            .apply { documentElement.normalize() }
+        fun firstTextByTag(tag: String): String? {
+            val nodes = doc.getElementsByTagName(tag)
+            for (i in 0 until nodes.length) {
+                val value = nodes.item(i)?.textContent?.trim()
+                if (!value.isNullOrBlank()) return value
+            }
+            return null
+        }
+        val projectName = firstTextByTag("name")
+        val projectUrl = firstTextByTag("url")
+        val licenseNodes = doc.getElementsByTagName("license")
+        val licenses = buildList {
+            for (i in 0 until licenseNodes.length) {
+                val node = licenseNodes.item(i) ?: continue
+                val children = node.childNodes
+                var licenseName: String? = null
+                var licenseUrl: String? = null
+                for (j in 0 until children.length) {
+                    val child = children.item(j) ?: continue
+                    when (child.nodeName) {
+                        "name" -> licenseName = child.textContent?.trim()
+                        "url" -> licenseUrl = child.textContent?.trim()
+                    }
+                }
+                if (!licenseName.isNullOrBlank()) {
+                    add(PomLicense(name = licenseName, url = licenseUrl))
+                }
+            }
+        }
+        PomMetadata(
+            name = projectName,
+            projectUrl = projectUrl,
+            licenses = licenses
+        )
+    }.getOrElse {
+        PomMetadata(name = null, projectUrl = null, licenses = emptyList())
+    }
+}
+
+fun readNoticeOrLicenseText(artifactFile: File): String? {
+    if (!artifactFile.exists() || !artifactFile.isFile) return null
+    val candidateNames = listOf(
+        "META-INF/NOTICE",
+        "META-INF/NOTICE.txt",
+        "META-INF/NOTICE.md",
+        "META-INF/LICENSE",
+        "META-INF/LICENSE.txt",
+        "META-INF/LICENSE.md"
+    )
+    return runCatching {
+        ZipFile(artifactFile).use { zip ->
+            candidateNames.firstNotNullOfOrNull { name ->
+                val entry = zip.getEntry(name) ?: return@firstNotNullOfOrNull null
+                zip.getInputStream(entry).bufferedReader(StandardCharsets.UTF_8).use { reader ->
+                    reader.readText().takeIf { it.isNotBlank() }
+                }
+            }
+        }
+    }.getOrNull()
+}
+
+fun prettifyArtifactName(name: String): String {
+    return name.split('-', '_')
+        .filter { it.isNotBlank() }
+        .joinToString(" ") { token ->
+            when (token.lowercase(Locale.US)) {
+                "ktx" -> "KTX"
+                "api" -> "API"
+                "sdk" -> "SDK"
+                else -> token.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(Locale.US) else it.toString()
+                }
+            }
+        }
+}
+
+fun resolveDisplayTitle(group: String, name: String): String {
+    return when {
+        group == "androidx.activity" && name == "activity-ktx" -> "AndroidX Activity KTX"
+        group == "androidx.appcompat" && name == "appcompat" -> "AndroidX AppCompat"
+        group == "androidx.core" && name == "core-ktx" -> "AndroidX Core KTX"
+        group == "androidx.constraintlayout" && name == "constraintlayout" -> "AndroidX ConstraintLayout"
+        group == "com.google.android.material" && name == "material" -> "Material Components for Android"
+        group.startsWith("org.jetbrains.kotlin") && name.startsWith("kotlin-stdlib") -> "Kotlin Standard Library"
+        group == "com.google.android.gms" && name == "play-services-location" -> "Google Play services Location"
+        group.startsWith("androidx.") -> "AndroidX ${prettifyArtifactName(name)}"
+        else -> prettifyArtifactName(name)
+    }
+}
+
+val revisionInputRoots = listOf(
+    rootProject.file("build.gradle.kts"),
+    rootProject.file("settings.gradle.kts"),
+    rootProject.file("gradle/libs.versions.toml"),
+    project.file("build.gradle.kts"),
+    project.file("proguard-rules.pro"),
+    project.file("src/main"),
+    project.file("src/debug"),
+    project.file("src/release")
+)
+
+val revisionInputFiles = revisionInputRoots
+    .flatMap(::collectRevisionInputFiles)
+    .distinctBy { it.absolutePath }
+
+val revisionProperties = Properties().apply {
+    if (revisionStateFile.exists()) {
+        revisionStateFile.inputStream().use { load(it) }
+    }
+}
+
+val currentRevisionHash = computeRevisionHash(revisionInputFiles, rootProject.projectDir)
+val storedRevisionHash = revisionProperties.getProperty("last_hash")
+var revisionCounter = revisionProperties.getProperty("counter")?.toIntOrNull() ?: 0
+var revisionDate = revisionProperties.getProperty("stamp_date")
+val todayRevisionDate = createRevisionDateFormatter().format(Date())
+
+if (storedRevisionHash != currentRevisionHash) {
+    revisionCounter = if (revisionDate == todayRevisionDate) {
+        revisionCounter + 1
+    } else {
+        1
+    }
+    revisionDate = todayRevisionDate
+    revisionProperties["last_hash"] = currentRevisionHash
+    revisionProperties["counter"] = revisionCounter.toString()
+    revisionProperties["stamp_date"] = revisionDate
+    revisionStateFile.outputStream().use {
+        revisionProperties.store(it, "Auto-generated. Incremented when source hash changes.")
+    }
+}
+
+if (revisionDate.isNullOrBlank()) {
+    revisionDate = todayRevisionDate
+}
+
+val revisionId = "${revisionDate}_${revisionCounter.toString().padStart(6, '0')}"
+val generatedOssAssetsDir = layout.buildDirectory.dir("generated/oss-assets")
+val generatedOssFile = generatedOssAssetsDir.map { it.file("oss_licenses/oss_licenses_auto.json") }
+
+val generateOssLicensesAutoJson = tasks.register("generateOssLicensesAutoJson") {
+    outputs.file(generatedOssFile)
+    doLast {
+        val runtimeConfigurationName = listOf(
+            "debugRuntimeClasspath",
+            "releaseRuntimeClasspath",
+            "runtimeClasspath"
+        ).firstOrNull { project.configurations.findByName(it) != null }
+            ?: error("No runtime classpath configuration found for OSS generation.")
+
+        val runtimeArtifacts = project.configurations
+            .getByName(runtimeConfigurationName)
+            .incoming
+            .artifacts
+            .artifacts
+            .filterIsInstance<ResolvedArtifactResult>()
+
+        val moduleArtifacts = runtimeArtifacts
+            .mapNotNull { artifact ->
+                val id = artifact.id.componentIdentifier as? ModuleComponentIdentifier
+                    ?: return@mapNotNull null
+                id to artifact.file
+            }
+            .distinctBy { (id, _) -> "${id.group}:${id.module}:${id.version}" }
+
+        val componentIds = moduleArtifacts.map { it.first }
+        val pomByCoordinate = mutableMapOf<String, PomMetadata>()
+        if (componentIds.isNotEmpty()) {
+            val queryResult = dependencies.createArtifactResolutionQuery()
+                .forComponents(componentIds)
+                .withArtifacts(MavenModule::class.java, MavenPomArtifact::class.java)
+                .execute()
+            queryResult.resolvedComponents.forEach { component ->
+                val id = component.id as? ModuleComponentIdentifier ?: return@forEach
+                val pomArtifact = component.getArtifacts(MavenPomArtifact::class.java)
+                    .filterIsInstance<ResolvedArtifactResult>()
+                    .firstOrNull()
+                    ?: return@forEach
+                val coordinate = "${id.group}:${id.module}:${id.version}"
+                pomByCoordinate[coordinate] = parsePomMetadata(pomArtifact.file)
+            }
+        }
+
+        val entries = moduleArtifacts.map { (id, artifactFile) ->
+            val coordinate = "${id.group}:${id.module}:${id.version}"
+            val pom = pomByCoordinate[coordinate]
+            val licenses = pom?.licenses.orEmpty()
+            val licenseLabel = if (licenses.isEmpty()) {
+                "License not specified"
+            } else {
+                licenses.joinToString(" / ") { it.name }
+            }
+            val licenseUrl = licenses.firstOrNull { !it.url.isNullOrBlank() }?.url
+            val projectUrl = pom?.projectUrl
+            val body = readNoticeOrLicenseText(artifactFile)
+            OssCatalogEntry(
+                title = pom?.name?.takeIf { it.isNotBlank() }
+                    ?: resolveDisplayTitle(id.group, id.module),
+                coordinate = coordinate,
+                license = licenseLabel,
+                url = licenseUrl ?: projectUrl ?: "https://mvnrepository.com/artifact/${id.group}/${id.module}",
+                body = body ?: ""
+            )
+        }
+            .distinctBy { it.coordinate }
+            .sortedBy { it.coordinate.lowercase(Locale.US) }
+
+        val outFile = generatedOssFile.get().asFile
+        outFile.parentFile.mkdirs()
+        val generatedAt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US).format(Date())
+        val json = buildString {
+            append("{\n")
+            append("  \"generatedAt\": \"").append(jsonEscape(generatedAt)).append("\",\n")
+            append("  \"entries\": [\n")
+            entries.forEachIndexed { index, entry ->
+                append("    {\n")
+                append("      \"title\": \"").append(jsonEscape(entry.title)).append("\",\n")
+                append("      \"coordinate\": \"").append(jsonEscape(entry.coordinate)).append("\",\n")
+                append("      \"license\": \"").append(jsonEscape(entry.license)).append("\",\n")
+                append("      \"url\": \"").append(jsonEscape(entry.url)).append("\",\n")
+                append("      \"body\": \"").append(jsonEscape(entry.body)).append("\"\n")
+                append("    }")
+                if (index != entries.lastIndex) append(",")
+                append("\n")
+            }
+            append("  ]\n")
+            append("}\n")
+        }
+        outFile.writeText(json)
+    }
+}
+
+android {
+    namespace = "com.ruich97.beastlocatorwatch"
+    compileSdk = 36
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    val appVersionName = "0.9.5-Beta" // (開発時バージョン: 1.2.10-IntDev)
+
+    defaultConfig {
+        applicationId = "com.ruich97.beastlocatorwatch"
+        minSdk = 26
+        targetSdk = 36
+        versionCode = 202603281   // 2026, 03, 28, 1(年、月、日、その日のうちの何個目)
+        versionName = appVersionName
+        buildConfigField("String", "REVISION_ID", "\"$revisionId\"")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    sourceSets.getByName("main") {
+        assets.srcDirs("build/generated/oss-assets")
+    }
+}
+
+tasks.named("preBuild").configure {
+    dependsOn(generateOssLicensesAutoJson)
+}
+
+dependencies {
+    implementation("androidx.core:core-ktx:1.18.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.13.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation("androidx.activity:activity-ktx:1.13.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+}

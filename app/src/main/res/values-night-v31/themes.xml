@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.RandomDirection" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="fontFamily">@font/noto_sans_jp</item>
+        <item name="android:fontFamily">@font/noto_sans_jp</item>
+        <item name="colorPrimary">@color/expressive_primary</item>
+        <item name="colorOnPrimary">@color/expressive_on_primary</item>
+        <item name="colorPrimaryContainer">@color/expressive_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/expressive_on_primary_container</item>
+        <item name="colorSecondary">@color/expressive_secondary</item>
+        <item name="colorOnSecondary">@color/expressive_on_secondary</item>
+        <item name="android:windowBackground">@drawable/bg_main_gradient</item>
+        <item name="shapeAppearanceSmallComponent">@style/Shape.RandomDirection.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/Shape.RandomDirection.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/Shape.RandomDirection.Large</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+
+    <style name="Shape.RandomDirection.Small" parent="ShapeAppearance.Material3.Corner.Medium">
+        <item name="cornerSize">14dp</item>
+    </style>
+
+    <style name="Shape.RandomDirection.Medium" parent="ShapeAppearance.Material3.Corner.Large">
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="Shape.RandomDirection.Large" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+        <item name="cornerSize">28dp</item>
+    </style>
+</resources>

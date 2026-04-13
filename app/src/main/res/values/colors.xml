@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue_700">#0E5CAD</color>
+    <color name="blue_100">#E5F1FF</color>
+    <color name="black">#111111</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="expressive_primary">#0057D8</color>
+    <color name="expressive_on_primary">#FFFFFF</color>
+    <color name="expressive_primary_container">#D8E6FF</color>
+    <color name="expressive_on_primary_container">#0E2D63</color>
+    <color name="expressive_secondary">#0B57D0</color>
+    <color name="expressive_on_secondary">#FFFFFF</color>
+    <color name="expressive_surface_start">#F6FAFF</color>
+    <color name="expressive_surface_mid">#EDF4FF</color>
+    <color name="expressive_surface_end">#E8F1FF</color>
+    <color name="expressive_surface_card">#FDFEFF</color>
+    <color name="expressive_on_surface">#0F172A</color>
+    <color name="expressive_on_surface_variant">#334155</color>
+    <color name="expressive_outline">#AFC2DE</color>
+    <color name="expressive_primary_20">#330057D8</color>
+</resources>
