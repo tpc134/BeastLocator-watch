@@ -6,7 +6,7 @@
 
 ## About
 
-An unofficial port of [BeastLocator](https://github.com/Aspenshark/BeastLocator) optimized for standalone Android watches.  
+An unofficial port of [BeastLocator](https://github.com/Link2011-Act2/BeastLocator) optimized for standalone Android watches.  
 Built for users who want navigation assistance directly on their wrist.
 
 > ⚠️ **Note:** This is **not** a Wear OS app. It requires a full Android device (no companion phone app needed).
@@ -58,7 +58,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 ## 简介
 
-[BeastLocator](https://github.com/Aspenshark/BeastLocator) 的非官方手表版移植，专为独立 Android 手表优化。  
+[BeastLocator](https://github.com/Link2011-Act2/BeastLocator) 的非官方手表版移植，专为独立 Android 手表优化。  
 无需配对手机，直接在手表上使用导航功能。
 
 > ⚠️ **注意：** 本项目**不是** Wear OS 应用。仅适用于完整 Android 设备。
